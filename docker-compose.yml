@@ -61,11 +61,11 @@ services:
       - "4000:4000"
     environment:
       - PORT=4000
-      - HOST=localhost  
-      - USER=root
-      - PASSWORD=admin       
+      - HOST='localhost'  
+      - USER='root'
+      - PASSWORD=''       
       - DATABASE_PORT=3306
-      - NAME=labhkari         
+      - NAME='labhkari'         
     depends_on:
       - mysql-container
     working_dir: /server
