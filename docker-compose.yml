@@ -49,10 +49,8 @@ services:
     container_name: mysql-container
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: 'admin'
-      MYSQL_DATABASE: 'labhkari'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: labhkari
     ports:
       - "3306:3306"
 
@@ -65,7 +63,7 @@ services:
       - PORT=4000
       - HOST='localhost'  
       - USER='root'
-      - PASSWORD='admin'       
+      - PASSWORD=''       
       - DATABASE_PORT=3306
       - NAME='labhkari'         
     depends_on:
