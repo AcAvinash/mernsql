@@ -1,45 +1,43 @@
 version: '3.8'
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
+  mysql-container:
+    container_name: mysql-container
+    image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD= admin
-      - MYSQL_DATABASE= labhkari
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: labhkari
     ports:
       - "3306:3306"
 
   backend:
-    build: ./server
-    container_name: server
-    environment:
-      - HOST=mysql
-      - USER=root
-      - DATABASE_PORT=3306
-      - PASSWORD=admin
-      - MYSQL_DATABASE=labhkari
-      - RAZORPAY_KEY_ID=rzp_test_y5kB7jPsNn1fCY
-      - RAZORPAY_SECRET=i2xuKx6iAFHlyhMmyfbbylGO
-    depends_on:
-      - mysql
+    container_name: backend
+    build:
+      context: ./server
     ports:
       - "4000:4000"
-    working_dir: /server
-    command: npm start
+    environment:
+      - PORT= 4000
+      - HOST= mysql-container  
+      - USER= root
+      - PASSWORD= admin        
+      - DATABASE_PORT= 3306
+      - NAME= labhkari         
+    depends_on:
+      - mysql-container
 
   frontend:
-    build: ./client
-    container_name: client
+    container_name: frontend
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
     environment:
-      - NEXT_CLIENT_PUBLIC_URL=http://localhost:3000
-      - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
+      - NEXT_CLIENT_PUBLIC_URL= http://localhost:3000
+      - NEXT_PUBLIC_SERVER_URL= http://localhost:4000
       - NODE_ENV=production
     depends_on:
       - backend
-    ports:
-      - "3000:3000"
-    working_dir: /client
-    command: npm run dev
+
 
 
 
