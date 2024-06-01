@@ -2,7 +2,7 @@ FROM node:20.11.0-alpine
 
 WORKDIR /frontend
 
-COPY client/package*.json ./
+COPY client\package*.json ./
 
 
 RUN npm install
