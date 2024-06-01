@@ -55,18 +55,16 @@ services:
       - "3306:3306"
 
   backend:
+    build: ./backend
     container_name: backend
-    build:
-      context: ./backend
-    ports:
-      - "4000:4000"
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
-      - RAZORPAY_SECRET=${RAZORPAY_SECRET}
+     - HOST=${HOST}
+     - USER=${USER}
+     - DATABASE_PORT=${DATABASE_PORT}
+     - PASSWORD=${PASSWORD}
+     - NAME=${NAME}
+     - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
+     - RAZORPAY_SECRET=${RAZORPAY_SECRET}
     depends_on:
       - mysql-container
     working_dir: /backend
@@ -74,8 +72,7 @@ services:
 
   frontend:
     container_name: frontend
-    build:
-      context: ./frontend
+    build: ./frontend
     ports:
       - "3000:3000"
     environment:
