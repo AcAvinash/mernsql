@@ -1,8 +1,8 @@
 FROM node:20.11.0-alpine
 
-WORKDIR /backend
+WORKDIR /server
 
-COPY server\package*.json ./
+COPY server/package*.json ./
 
 
 RUN npm install
