@@ -46,7 +46,7 @@
 version: '3.8'
 services:
   mysql-container:
-    container_name: mysql-container
+    container_name: localhost
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: admin
@@ -61,7 +61,7 @@ services:
       - "4000:4000"
     environment:
       - PORT=4000
-      - HOST=mysql-container  # Update the host to match the service name of the MySQL container
+      - HOST=localhost  # Update the host to match the service name of the MySQL container
       - USER=root
       - PASSWORD=admin        # Update the password if necessary
       - DATABASE_PORT=3306
