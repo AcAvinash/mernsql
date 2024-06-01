@@ -1,56 +1,11 @@
-# version: '3.8'
-# services:
-#   mysql:
-#     image: mysql:8.0
-#     container_name: mysql
-#     environment:
-#       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-#     ports:
-#       - "3306:3306"
-
-#   backend:
-#     build: ./backend
-#     container_name: backend
-#     environment:
-#       - HOST=${HOST}
-#       - USER=${USER}
-#       - DATABASE_PORT=${DATABASE_PORT}
-#       - PASSWORD=${PASSWORD}
-#       - NAME=${NAME}
-#       - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
-#       - RAZORPAY_SECRET=${RAZORPAY_SECRET}
-#     depends_on:
-#       - mysql
-#     ports:
-#       - "4000:4000"
-#     working_dir: /backend
-#     command: npm start
-
-#   frontend:
-#     build: ./frontend
-#     container_name: frontend
-#     environment:
-#       - NEXT_CLIENT_PUBLIC_URL=${NEXT_CLIENT_PUBLIC_URL}
-#       - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-#       - NODE_ENV=${NODE_ENV}
-#     depends_on:
-#       - backend
-#     ports:
-#       - "3000:3000"
-#     working_dir: /frontend
-#     command: npm run dev
-
-
 version: '3.8'
 services:
-  mysql-container:
-    container_name: mysql-container
-    image: mysql:latest
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-    volumes:
-      - mysql-data:/var/lib/mysql
+      - MYSQL_ROOT_PASSWORD= admin
+      - MYSQL_DATABASE= labhkari
     ports:
       - "3306:3306"
 
@@ -58,36 +13,33 @@ services:
     build: ./backend
     container_name: backend
     environment:
-     - HOST=${HOST}
-     - USER=${USER}
-     - DATABASE_PORT=${DATABASE_PORT}
-     - PASSWORD=${PASSWORD}
-     - NAME=${NAME}
-     - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
-     - RAZORPAY_SECRET=${RAZORPAY_SECRET}
+      - HOST=mysql
+      - USER=root
+      - DATABASE_PORT=3306
+      - PASSWORD=admin
+      - MYSQL_DATABASE=labhkari
+      - RAZORPAY_KEY_ID=rzp_test_y5kB7jPsNn1fCY
+      - RAZORPAY_SECRET=i2xuKx6iAFHlyhMmyfbbylGO
     depends_on:
-      - mysql-container
+      - mysql
+    ports:
+      - "4000:4000"
     working_dir: /backend
     command: npm start
 
   frontend:
-    container_name: frontend
     build: ./frontend
-    ports:
-      - "3000:3000"
+    container_name: frontend
     environment:
-      - NEXT_CLIENT_PUBLIC_URL=${NEXT_CLIENT_PUBLIC_URL}
-      - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-      - NODE_ENV=${NODE_ENV}
+      - NEXT_CLIENT_PUBLIC_URL=http://localhost:3000
+      - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
+      - NODE_ENV=production
     depends_on:
       - backend
+    ports:
+      - "3000:3000"
     working_dir: /frontend
     command: npm run dev
-
-volumes:
-  mysql-data:
-
-
 
 
 
