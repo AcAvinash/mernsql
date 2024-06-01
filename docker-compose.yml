@@ -52,7 +52,7 @@ services:
       MYSQL_ROOT_PASSWORD: 'admin'
       MYSQL_DATABASE: 'labhkari'
       MYSQL_USER: 'root'
-      MYSQL_PASSWORD: ''
+      MYSQL_PASSWORD: 'admin'
     ports:
       - "3306:3306"
 
@@ -65,7 +65,7 @@ services:
       - PORT=4000
       - HOST='localhost'  
       - USER='root'
-      - PASSWORD=''       
+      - PASSWORD='admin'       
       - DATABASE_PORT=3306
       - NAME='labhkari'         
     depends_on:
