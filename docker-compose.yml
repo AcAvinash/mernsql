@@ -87,18 +87,10 @@
 
 
 
+# 
+
 version: '3.8'
 services:
-  mysql-container:
-    container_name: mysql-container
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_DATABASE: labhkari
-    ports:
-      - "3307:3306"
-
   backend:
     container_name: backend
     build:
@@ -107,9 +99,9 @@ services:
       - "4000:4000"
     environment:
       - PORT=4000
-      - HOST=mysql-container
-      - USER=root
-      - PASSWORD=admin
+      - HOST=labhkari.cwhm1m5cemx9.ap-south-1.rds.amazonaws.com
+      - USER=admin
+      - PASSWORD=Root9876
       - DATABASE_PORT=3306
       - NAME=labhkari
     depends_on:
@@ -127,5 +119,6 @@ services:
       - NODE_ENV=production
     depends_on:
       - backend
+
 
 
