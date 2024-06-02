@@ -89,36 +89,43 @@
 
 version: '3.8'
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: client/
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-  backend:
-    container_name: backend
-    build:
-      context: server/
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_HOST=mysql-container
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=admin
-      - MYSQL_DATABASE=labhkari
-    depends_on:
-      - db
-  db:
+  mysql-container:
     container_name: mysql-container
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
-      - MYSQL_DATABASE=labhkari
-    volumes:
-      - mysql-data:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: labhkari
+    ports:
+      - "3307:3306"
 
-volumes:
-  mysql-data:
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - HOST=mysql-container
+      - USER=root
+      - PASSWORD=admin
+      - DATABASE_PORT=3306
+      - NAME=labhkari
+    depends_on:
+      - mysql-container
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_CLIENT_PUBLIC_URL=http://localhost:3000
+      - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
 
