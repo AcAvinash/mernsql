@@ -90,6 +90,40 @@
 # 
 
 
+# services:
+#   backend:
+#     container_name: backend
+#     build:
+#       context: ./server
+#     ports:
+#       - "4000:4000"
+#     environment:
+#       - PORT=4000
+#       - HOST=labhkari.cwhm1m5cemx9.ap-south-1.rds.amazonaws.com
+#       - USER=admin
+#       - PASSWORD=Root9876
+#       - DATABASE_PORT=3306
+#       - NAME=labhkari
+
+
+#   frontend:
+#     container_name: frontend
+#     build:
+#       context: ./client
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - NEXT_CLIENT_PUBLIC_URL=http://localhost:3000
+#       - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
+#       - NODE_ENV=development
+#       - HOST=0.0.0.0
+#     depends_on:
+#       - backend
+
+
+
+
+
 services:
   backend:
     container_name: backend
@@ -97,14 +131,8 @@ services:
       context: ./server
     ports:
       - "4000:4000"
-    environment:
-      - PORT=4000
-      - HOST=labhkari.cwhm1m5cemx9.ap-south-1.rds.amazonaws.com
-      - USER=admin
-      - PASSWORD=Root9876
-      - DATABASE_PORT=3306
-      - NAME=labhkari
-
+    env_file:
+      - ./server.env
 
   frontend:
     container_name: frontend
@@ -112,13 +140,7 @@ services:
       context: ./client
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_CLIENT_PUBLIC_URL=http://localhost:3000
-      - NEXT_PUBLIC_SERVER_URL=http://localhost:4000
-      - NODE_ENV=development
-      - HOST=0.0.0.0
+    env_file:
+      - ./client.env
     depends_on:
       - backend
-
-
-
