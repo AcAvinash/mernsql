@@ -124,6 +124,7 @@
 
 
 
+
 services:
   backend:
     container_name: backend
@@ -132,7 +133,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - ./backend.env
+      - ./server/.env
 
   frontend:
     container_name: frontend
@@ -141,6 +142,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend.env
+      - ./client/.env
     depends_on:
       - backend
+
