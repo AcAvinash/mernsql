@@ -104,8 +104,7 @@ services:
       - PASSWORD=Root9876
       - DATABASE_PORT=3306
       - NAME=labhkari
-    depends_on:
-      - mysql-container
+
 
   frontend:
     container_name: frontend
