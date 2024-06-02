@@ -93,7 +93,6 @@ services:
     container_name: frontend
     build:
       context: client/
-    image: fronted-image
     ports:
       - "80:80"
     depends_on:
@@ -102,7 +101,6 @@ services:
     container_name: backend
     build:
       context: server/
-    image: backend-image
     ports:
       - "3306:3306"
     environment:
