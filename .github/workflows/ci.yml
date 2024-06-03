@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch: # Manual trigger event
 
 jobs:
   build:
@@ -35,11 +36,14 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install dependencies
+      - name: Install dependencies (Backend)
         run: |
           cd server
           npm install
-          cd ../client
+
+      - name: Install dependencies (Frontend)
+        run: |
+          cd client
           npm install
 
       - name: Build backend
