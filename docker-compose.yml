@@ -125,6 +125,30 @@
 
 
 
+# services:
+#   backend:
+#     container_name: backend
+#     build:
+#       context: ./server
+#     ports:
+#       - "4000:4000"
+#     env_file:
+#       - ./server/.env
+
+#   frontend:
+#     container_name: frontend
+#     build:
+#       context: ./client
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./client/.env
+#     depends_on:
+#       - backend
+
+
+version: '3.8'
+
 services:
   backend:
     container_name: backend
@@ -134,6 +158,8 @@ services:
       - "4000:4000"
     env_file:
       - ./server/.env
+    networks:
+      - app-network
 
   frontend:
     container_name: frontend
@@ -145,4 +171,21 @@ services:
       - ./client/.env
     depends_on:
       - backend
+    networks:
+      - app-network
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
