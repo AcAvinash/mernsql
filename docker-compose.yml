@@ -1,26 +1,4 @@
 
-# services:
-#   backend:
-#     container_name: backend
-#     build:
-#       context: ./server
-#     ports:
-#       - "4000:4000"
-#     env_file:
-#       - ./server/.env
-
-#   frontend:
-#     container_name: frontend
-#     build:
-#       context: ./client
-#     ports:
-#       - "3000:3000"
-#     env_file:
-#       - ./client/.env
-#     depends_on:
-#       - backend
-
-
 services:
   backend:
     container_name: backend
@@ -42,15 +20,37 @@ services:
     depends_on:
       - backend
 
-  nginx:
-    container_name: nginx
-    image: nginx:latest
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/nginx.conf
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - frontend
+
+# services:
+#   backend:
+#     container_name: backend
+#     build:
+#       context: ./server
+#     ports:
+#       - "4000:4000"
+#     env_file:
+#       - ./server/.env
+
+#   frontend:
+#     container_name: frontend
+#     build:
+#       context: ./client
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./client/.env
+#     depends_on:
+#       - backend
+
+#   nginx:
+#     container_name: nginx
+#     image: nginx:latest
+#     volumes:
+#       - ./nginx/default.conf:/etc/nginx/nginx.conf
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+#       - frontend
 
 
