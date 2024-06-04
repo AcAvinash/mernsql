@@ -1,8 +1,8 @@
 // pages/payment-info.js
 'use client'
 import Image from 'next/image';
-import React, { useEffect, useId, useState } from 'react';
-import qr from '../../assets/qr.jpeg'
+import React, { Suspense, useEffect, useState } from 'react';
+import qr from '../../assets/qr.jpeg';
 import Navbar from '@/Components/Navbar';
 import axios from 'axios';
 import Script from 'next/script';
@@ -14,16 +14,13 @@ declare global {
     }
 }
 
-const page = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+const PaymentPage: React.FC = () => {
     const searchParams = useSearchParams();
     const amount = searchParams ? searchParams.get('amount') : null;
     const ref = searchParams ? searchParams.get('ref') : null;
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [offer, setOffer] = useState<Boolean>(false);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         const handleRef = async () => {
             const url = process.env.NEXT_PUBLIC_SERVER_URL + "/auth/ref";
@@ -36,7 +33,6 @@ const page = () => {
                     body: JSON.stringify({ ref: ref }),
                 });
                 const res = await response.json();
-                // res.success ? setOffer(true) : setOffer(false)
                 if (res.success) {
                     setOffer(true);
                 } else {
@@ -45,11 +41,10 @@ const page = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
-        }
+        };
         ref && handleRef();
-    }, [ref])
+    }, [ref]);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [formData, setFormData] = useState({
         name: '',
         address: '',
@@ -70,14 +65,13 @@ const page = () => {
         });
     };
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         const uid = localStorage.getItem('userId');
         if (!uid) {
-            alert('Login to make payments')
+            alert('Login to make payments');
             return;
         }
-    })
+    }, []);
 
     const handleSubmit = async (orderId: any, email: any, amount: number, amountPaid: boolean, userId: string | null, paymentMethod: string, itemCount: number, shippingAddress: string, phone: string, name: string) => {
         const url = process.env.NEXT_PUBLIC_SERVER_URL + "/order/addOrder";
@@ -100,28 +94,27 @@ const page = () => {
         }
     };
 
-    const handlePaymentMethodChange = async (method: any) => {
+    const handlePaymentMethodChange = (method: any) => {
         setFormData({
             ...formData,
             paymentMethod: method
         });
     };
 
-
     const handlePayment = async (e: any) => {
         e.preventDefault();
-        if (formData.paymentMethod == 'card') {
+        if (formData.paymentMethod === 'card') {
             const url = process.env.NEXT_PUBLIC_SERVER_URL + "/paytm/getkey";
             const curl = process.env.NEXT_PUBLIC_SERVER_URL + "/paytm/checkout";
             const rurl = process.env.NEXT_PUBLIC_SERVER_URL + "/paytm/paymentverification";
 
-            const { data: { key } } = await axios.get(url)
+            const { data: { key } } = await axios.get(url);
 
             const { data: { order } } = await axios.post(curl, {
                 amount: amount
-            })
+            });
 
-            localStorage.setItem('order', order.id)
+            localStorage.setItem('order', order.id);
 
             const options = {
                 key,
@@ -147,13 +140,13 @@ const page = () => {
             const paymentObject = new window.Razorpay(options);
             paymentObject.open();
 
-            await handleSubmit(order.id, formData.email, order.name, order.phoneNumber, localStorage.getItem('userId'), formData.paymentMethod, 2, formData.address, formData.phoneNumber, formData.name)
+            await handleSubmit(order.id, formData.email, order.name, order.phoneNumber, localStorage.getItem('userId'), formData.paymentMethod, 2, formData.address, formData.phoneNumber, formData.name);
 
             paymentObject.on("payment.failed", function () {
                 alert("Payment failed. Please try again. Contact support for help");
             });
         }
-    }
+    };
 
     return (
         <>
@@ -161,12 +154,11 @@ const page = () => {
                 id="razorpay-checkout-js"
                 src="https://checkout.razorpay.com/v1/checkout.js"
             />
-            <Navbar />
+            <Navbar onSearch={() => { }} />
             <div className="container mx-auto px-4 md:mt-20 mt-36 mb-10">
                 <h1 className="text-3xl font-bold mb-6">Payment Information</h1>
-                <form >
+                <form>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label> */}
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="name"
@@ -179,10 +171,9 @@ const page = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Email</label> */}
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="name"
+                            id="email"
                             type="text"
                             placeholder="Enter your email"
                             name="email"
@@ -191,9 +182,7 @@ const page = () => {
                             required
                         />
                     </div>
-
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">Address</label> */}
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="address"
@@ -206,7 +195,6 @@ const page = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneNumber">Phone Number</label> */}
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="phoneNumber"
@@ -219,7 +207,6 @@ const page = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pinCode">Pin Code</label> */}
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="pinCode"
@@ -232,7 +219,6 @@ const page = () => {
                         />
                     </div>
                     <div className="mb-6">
-                        {/* <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="paymentMethod">Payment Method</label> */}
                         <select
                             className="shadow appearance-none border rounded md:w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-auto"
                             id="paymentMethod"
@@ -250,55 +236,11 @@ const page = () => {
                             Your now paying an amount of  ₹ {amount}
                         </div>}
                     </div>
-
-                    {/* Render fields based on selected payment method */}
-                    {/* {formData.paymentMethod === 'card' && (
-                        <div>
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cardNumber">Card Number</label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="cardNumber"
-                                    type="text"
-                                    placeholder="Enter card number"
-                                    name="cardNumber"
-                                    value={formData.cardNumber}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cardNumber">Expiry Date</label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="cardNumber"
-                                    type="text"
-                                    placeholder="Enter card number"
-                                    name="expiryDate"
-                                    value={formData.expiryDate}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cardNumber">CVV</label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="cardNumber"
-                                    type="text"
-                                    placeholder="Enter card number"
-                                    name="cvv"
-                                    value={formData.cvv}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-                    )} */}
-
-
                     {formData.paymentMethod === 'qr' && (
                         <div className="mb-6">
                             <Image src={qr} alt="QR Code" className="max-w-xs mx-auto" width={100} height={100} />
                         </div>
                     )}
-
                     <div className="flex items-center justify-end">
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -312,4 +254,10 @@ const page = () => {
     );
 };
 
-export default page;
+const PaymentPageWrapper: React.FC = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <PaymentPage />
+    </Suspense>
+);
+
+export default PaymentPageWrapper;

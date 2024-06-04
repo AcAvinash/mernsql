@@ -2,27 +2,27 @@
 import axios from 'axios';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
-const page = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+const Page = () => {
     const searchParams = useSearchParams();
     const success = searchParams ? searchParams.get('success') : null;
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         const handler = async () => {
-            const oid = localStorage.getItem('order')
+            const oid = localStorage.getItem('order');
             try {
                 await axios.post('/api/order', {
                     "order_id": oid,
                 });
             } catch (e) {
-                console.log(e)
+                console.log(e);
             }
+        };
+        if (success) {
+            handler();
         }
-        handler();
-    }, [])
+    }, [success]);
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
@@ -42,4 +42,10 @@ const page = () => {
     );
 };
 
-export default page;
+const PageWrapper = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <Page />
+    </Suspense>
+);
+
+export default PageWrapper;

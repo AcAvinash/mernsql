@@ -27,10 +27,10 @@ const Card: React.FC<CardProps> = ({ id, title, image, description, price, ratin
         event.preventDefault();
         const uid = localStorage.getItem('userId');
 
-        // if (!uid) {
-        //     alert('Please login to add to cart');
-        //     return;
-        // }
+        if (!uid) {
+            alert('Please login to add to cart');
+            return;
+        }
 
         try {
             const response = await fetch(url, {
@@ -114,7 +114,7 @@ const Card: React.FC<CardProps> = ({ id, title, image, description, price, ratin
                         onClick={handleAddToCart}
                         className="flex items-center text-white bg-[#103178] hover:bg-[#103178] transition duration-300 px-3 py-1 rounded-full shadow-md"
                     >
-                        <AiOutlineShoppingCart className="w-5 h-5 mr-1"/>
+                        <AiOutlineShoppingCart className="w-5 h-5 mr-1" />
                         <span className="inline font-semibold">Add to Cart</span>
                     </button>
                 </div>

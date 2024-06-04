@@ -67,11 +67,11 @@ const HorizontalCard: React.FC<CardProps> = ({ title, image, price, id, userId, 
                 <p className="text-black">₹ {price}</p>
             </div>
             <div className="flex items-center mr-0">
-                <button onClick={() => incrementOrDecrementQuantity(-1)} className="px-3 py-1 bg-black rounded-l-md">
+                <button onClick={() => incrementOrDecrementQuantity(-1)} className="px-3 py-1 bg-white rounded-l-md">
                     -
                 </button>
-                <span className="px-3 py-1 bg-black">{quantity}</span>
-                <button onClick={() => incrementOrDecrementQuantity(1)} className="px-3 py-1 bg-black rounded-r-md">
+                <span className="px-3 py-1 bg-white text-black">{quantity}</span>
+                <button onClick={() => incrementOrDecrementQuantity(1)} className="px-3 py-1 bg-white rounded-r-md">
                     +
                 </button>
                 <button onClick={() => handleDelete(id)} className="ml-2 text-[#103178] focus:outline-none">

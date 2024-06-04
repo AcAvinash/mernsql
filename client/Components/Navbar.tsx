@@ -9,9 +9,6 @@ import { MdCleanHands, MdOutlineShoppingBag } from "react-icons/md";
 import { FaCartShopping } from "react-icons/fa6";
 import { RiAdminFill } from "react-icons/ri";
 import Image from 'next/image';
-import { GiFruitBowl } from "react-icons/gi";
-import { GiConverseShoe } from "react-icons/gi";
-import { GiMedicinePills } from "react-icons/gi";
 import { FaHome, FaInfoCircle, FaHeartbeat, FaSpa, FaUtensils, FaSeedling, FaHome as FaHomeIcon, FaPaw, FaEllipsisH, FaUserCircle, FaUser, FaWhatsapp, FaBell, FaThumbsUp, FaTruck } from 'react-icons/fa';
 import Logo from '../assets/logo.png'
 import Logo1 from '../assets/logo1.png'
@@ -45,14 +42,13 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
     const [spassword, setSPassword] = useState<string>();
     const [arr, setArr] = useState<Item[]>([]);
     const [done, setDone] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState<string>('');
     const [admin, setAdmin] = useState(false);
     const [count, setCount] = useState(0);
     const [cartAmount, setCartAmount] = useState(0);
-    const [userName, setUserName] = useState();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
 
     const handleSearchChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -65,11 +61,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
         setIsSearchOpen(false);
     };
 
-
     const toggleSearch = () => {
         setIsSearchOpen(prevState => !prevState);
     };
-
 
     const toggleCart = (): void => {
         setIsCartOpen(!isCartOpen);
@@ -295,41 +289,6 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
 
     return (
         <>
-            {isCartOpen && (
-                <div id="default-modal" aria-hidden="true" className="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                    <div className="relative p-4 w-full max-w-md">
-                        <div className="relative bg-white rounded-t-lg shadow dark:bg-white h-96 overflow-y-auto">
-                            <div className="sticky top-0 bg-white z-10">
-                                <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
-                                    <h3 className="text-xl font-semibold text-gray-900 dark:text-black">
-                                        Cart
-                                    </h3>
-                                    <button onClick={toggleCart} type="button" className="text-[#103178] bg-transparent hover:bg-[#103178] hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
-                                        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                        <span className="sr-only">Close modal</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className='text-white p-4'>
-                                {done && arr.map((i) => (
-                                    <HorizontalCard key={i.id} title={i.title} id={i.id} count={i.count} userId={i.userId} image={i.image} price={i.price} />
-                                ))}
-                                {/* <div className="mt-4">
-                                </div> */}
-                            </div>
-                        </div>
-                        <div className="mt-0 flex justify-between items-center rounded-b-lg sticky bottom-0 bg-white p-2 flex-no-wrap">
-                            <span className="text-black text-base sm:text-lg font-semibold">Total: ₹ {cartAmount}</span>
-                            <button className="bg-[#103178] hover:bg-[#103178] text-white font-bold py-2 px-4 rounded-full">
-                                <Link href={{ pathname: '/payment', query: { amount: cartAmount } }}>Checkout</Link>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {modalOpen && (
                 <div id="default-modal" aria-hidden="true" className="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex justify-center items-center">
                     <div className="relative p-4 w-full max-w-md">
@@ -428,7 +387,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                     <div className="absolute inset-y-0 right-0 md:h-full h-full w-full md:w-64 bg-white shadow-lg transition-transform transform">
                         {/* Close button */}
                         <button onClick={closeSidebar} className="absolute top-4 right-4 text-black focus:outline-none transition-transform transform hover:scale-110">
-                            <FaTimes className="h-8 w-8 text-red-500" />
+                            <FaTimes className="h-6 w-6 text-[#103178]" />
                         </button>
                         {/* Sidebar content */}
                         <div className="max-w-xs mx-auto mt-10 h-full p-6 bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
@@ -440,7 +399,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                     </div>
                                     <ul className="pl-6 mt-3 space-y-3">
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Health' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-red-400 transition-colors duration-300">
                                                     <FaHeartbeat className="mr-2 text-red-400 text-xl" />
                                                     <span className="text-md">Health</span>
@@ -448,7 +407,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Beauty' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-pink-400 transition-colors duration-300">
                                                     <FaSpa className="mr-2 text-pink-400 text-xl" />
                                                     <span className="text-md">Beauty</span>
@@ -456,7 +415,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Kitchen' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-yellow-400 transition-colors duration-300">
                                                     <FaUtensils className="mr-2 text-yellow-400 text-xl" />
                                                     <span className="text-md">Kitchen</span>
@@ -464,7 +423,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Agri' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-green-400 transition-colors duration-300">
                                                     <FaSeedling className="mr-2 text-green-400 text-xl" />
                                                     <span className="text-md">Agri</span>
@@ -472,7 +431,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Home' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-indigo-400 transition-colors duration-300">
                                                     <MdCleanHands className="mr-2 text-indigo-400 text-xl" />
                                                     <span className="text-md">Home</span>
@@ -480,7 +439,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="#" passHref>
+                                            <Link href={{ pathname: '/category', query: { cat: 'Vet' } }}>
                                                 <span className="flex items-center text-gray-700 hover:text-purple-400 transition-colors duration-300">
                                                     <FaPaw className="mr-2 text-purple-400 text-xl" />
                                                     <span className="text-md">Vet</span>
@@ -506,10 +465,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                     </button>
                                 </li>
                                 <li className="border-t pt-4">
-                                    <div className="flex items-center text-gray-800 hover:text-blue-500 transition-colors duration-300">
-                                        <FaUser className="mr-3 text-blue-500 text-2xl" />
-                                        <span className="font-semibold text-lg">Account</span>
-                                    </div>
+                                    {
+                                        localStorage.getItem('userId') && <div className="flex items-center text-gray-800 hover:text-blue-500 transition-colors duration-300">
+                                            <FaUser className="mr-3 text-blue-500 text-2xl" />
+                                            <span className="font-semibold text-lg">Account</span>
+                                        </div>
+                                    }
                                     <div className="flex items-center text-gray-800 hover:text-green-500 mt-4 transition-colors duration-300">
                                         <FaWhatsapp className="mr-3 text-green-500 text-2xl" />
                                         <span className="font-semibold text-lg">WhatsApp</span>
@@ -523,7 +484,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                         <span className="font-semibold text-lg">Success Story</span>
                                     </div>
                                     <div className="flex items-center text-gray-800 hover:text-indigo-500 mt-4 transition-colors duration-300">
-                                        <FaTruck className="mr-3 text-indigo-500 text-2xl" />
+                                        <a href='/orders'><FaTruck className="mr-3 text-indigo-500 text-2xl" /></a>
                                         <span className="font-semibold text-lg">Order Tracker</span>
                                     </div>
                                 </li>
@@ -554,14 +515,14 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                     <label htmlFor="simple-search" className="sr-only">Search</label>
                                     <div className="relative w-full">
                                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg className="w-3 h-3 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
+                                            <svg className="w-3 h-3 text-[#103178]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
                                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.15 5.6h.01m3.337 1.913h.01m-6.979 0h.01M5.541 11h.01M15 15h2.706a1.957 1.957 0 0 0 1.883-1.325A9 9 0 1 0 2.043 11.89 9.1 9.1 0 0 0 7.2 19.1a8.62 8.62 0 0 0 3.769.9A2.013 2.013 0 0 0 13 18v-.857A2.034 2.034 0 0 1 15 15Z" />
                                             </svg>
                                         </div>
                                         <input
                                             type="text"
                                             id="simple-search"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#103178] focus:border-[#103178] block w-full pl-10 p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#103178] dark:focus:border-[#103178]"
+                                            className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-[#103178] focus:border-[#103178] block w-full pl-10 p-1.5 dark:placeholder-gray-400 dark:focus:ring-[#103178] border-[#103178] dark:focus:border-[#103178]"
                                             placeholder="Search Product name..."
                                             value={searchQuery}
                                             onChange={handleSearchChange}
@@ -588,7 +549,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                                     </svg>
                                 </button>
                             </div>
-                            <a onClick={toggleCart} className="relative block md:ml-4 text-black text-2xl focus:ring-4 focus:outline-none focus:ring-[#103178] font-medium rounded-lg px-5 py-2.5 text-center">
+                            <a href='/cart' className="relative block md:ml-4 text-black text-2xl font-medium rounded-lg px-5 py-2.5 text-center">
                                 <FaCartShopping />
                                 <span className="absolute -top-1 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-[#103178] rounded-full">
                                     {count}
@@ -642,42 +603,42 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                 <div className="relative overflow-hidden h-20 lg:hidden">
                     <ul className="flex bg-white w-full flex-wrap justify-center items-center py-3 bottom-0 lg:hidden" data-carousel-item1>
                         <li className="border-r  px-5 last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Health' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <FaHeartbeat className="text-3xl text-red-400" />
                                 <span>Health</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="px-3 border-r last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Beauty' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <FaSpa className="text-3xl text-pink-400" />
                                 <span>Beauty</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="px-3 border-r last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Kitchen' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <FaUtensils className="text-3xl text-yellow-400" />
                                 <span>Kitchen</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="border-r px-3 last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Agri' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <FaSeedling className="text-3xl text-green-400" />
                                 <span>Agri</span>
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                     <ul className="flex bg-white w-full flex-wrap justify-center items-center py-5 bottom-0 z-40 lg:hidden" data-carousel-item1>
                         <li className="px-3 border-r last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Home' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <MdCleanHands className="text-3xl text-indigo-400" />
                                 <span>Home</span>
-                            </a>
+                            </Link>
                         </li>
                         <li className="px-3 border-r border-[#103178] last:border-r-0">
-                            <a href="#" className="text-black hover:text-black flex flex-col items-center space-y-1">
+                            <Link href={{ pathname: '/category', query: { cat: 'Vet' } }} className="text-black hover:text-black flex flex-col items-center space-y-1">
                                 <FaPaw className="text-3xl text-purple-400" />
                                 <span>Vet</span>
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                     <ul className="flex bg-white w-full flex-wrap justify-center items-center py-5 bottom-0 z-40 lg:hidden" data-carousel-item1>
@@ -708,7 +669,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                 <button onClick={shareOnWhatsApp} className="text-black text-2xl">
                     <FaShareAlt className='text-[#103178]' />
                 </button>
-                <a href="/" className="text-black text-2xl">
+                <a href="/orders" className="text-black text-2xl">
                     <FaTruck className='text-[#103178]' />
                 </a>
                 <a href="/about" className="text-black text-2xl">
